@@ -1,4 +1,4 @@
-"""Day 4 solution."""
+"""Day <day_number> solution."""
 import time
 
 
