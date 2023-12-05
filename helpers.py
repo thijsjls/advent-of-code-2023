@@ -17,6 +17,16 @@ def grouped(iterable, n):
     return zip(*[iter(iterable)] * n)
 
 
+def flatten(l: list) -> list:
+    flattened_list = []
+    for item in l:
+        if isinstance(item, list):
+            flattened_list.extend(flatten(item))
+        else:
+            flattened_list.append(item)
+    return flattened_list
+
+
 def read_input(single_string: bool = False, test: bool = False) -> list[str] | str:
     """Read input file lines."""
     input_file = "input.txt"
