@@ -1,10 +1,9 @@
 """Day 4 solution."""
-from collections import defaultdict
 import time
+from collections import defaultdict
 
 
 def timeit(f):
-
     def timed(*args, **kw):
         ts = time.time()
         result = f(*args, **kw)
@@ -26,7 +25,7 @@ def read_input(test: bool = False) -> list[str]:
 
 
 def parse_card(line: str) -> tuple[set[str]]:
-    tmp = line.replace('\n', '').split(':')[1].split('|')
+    tmp = line.replace("\n", "").split(":")[1].split("|")
     return set(tmp[0].split()), set(tmp[1].split())
 
 
@@ -37,7 +36,7 @@ def part_1(lines: list[str]) -> int:
     for line in lines:
         winning_numbers, numbers_you_have = parse_card(line)
         overlap = winning_numbers.intersection(numbers_you_have)
-        solution += 2**(len(overlap)-1) if overlap else 0
+        solution += 2 ** (len(overlap) - 1) if overlap else 0
     return solution
 
 

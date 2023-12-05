@@ -30,8 +30,7 @@ def get_symbols(lines: list[str]) -> list[Coordinate]:
     symbols = []
     for y, line in enumerate(lines):
         symbols.extend(
-            Coordinate(match.start(), y)
-            for match in re.finditer(r'[^\w\s.]', line)
+            Coordinate(match.start(), y) for match in re.finditer(r"[^\w\s.]", line)
         )
     return symbols
 
@@ -40,8 +39,7 @@ def get_star_symbols(lines: list[str]) -> list[Coordinate]:
     symbols = []
     for y, line in enumerate(lines):
         symbols.extend(
-            Coordinate(match.start(), y)
-            for match in re.finditer(r'[*]', line)
+            Coordinate(match.start(), y) for match in re.finditer(r"[*]", line)
         )
     return symbols
 
@@ -52,12 +50,9 @@ def get_numbers(lines: list[str]) -> list[Number]:
         numbers.extend(
             Number(
                 int(match.group()),
-                [
-                    Coordinate(x, y)
-                    for x in range(match.span()[0], match.span()[1])
-                ]
+                [Coordinate(x, y) for x in range(match.span()[0], match.span()[1])],
             )
-            for match in re.finditer(r'\b\d+\b', line)
+            for match in re.finditer(r"\b\d+\b", line)
         )
     return numbers
 
