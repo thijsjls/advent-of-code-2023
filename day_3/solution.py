@@ -3,6 +3,8 @@
 import re
 from dataclasses import dataclass
 
+from helpers import read_input
+
 
 @dataclass
 class Coordinate:
@@ -14,16 +16,6 @@ class Coordinate:
 class Number:
     value: int
     coordinates: list[Coordinate]
-
-
-def read_input(test: bool = False) -> list[str]:
-    """Read input file lines."""
-    input_file = "input.txt"
-    if test:
-        input_file = "test_input.txt"
-    with open(input_file, "r") as f:
-        lines = f.readlines()
-        return lines
 
 
 def get_symbols(lines: list[str]) -> list[Coordinate]:

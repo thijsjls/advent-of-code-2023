@@ -27,6 +27,13 @@ def flatten(l: list) -> list:
     return flattened_list
 
 
+def prod(l: list) -> int:
+    result = 1
+    for e in l:
+        result *= e
+    return result
+
+
 def read_input(single_string: bool = False, test: bool = False) -> list[str] | str:
     """Read input file lines."""
     input_file = "input.txt"
@@ -35,4 +42,4 @@ def read_input(single_string: bool = False, test: bool = False) -> list[str] | s
     with open(input_file, "r") as f:
         if single_string:
             return f.read()
-        return f.readline()
+        return f.readlines()

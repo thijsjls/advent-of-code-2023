@@ -9,10 +9,12 @@ from helpers import flatten, grouped, read_input, timeit
 class SeedRange:
     start: int
     range: int
+    end: int
 
     def __init__(self, start: int, range: int):
         self.start = start
         self.range = range
+        self.end = self.start + self.range - 1
 
     def __lt__(self, other):
         return self.start < other.start
@@ -23,11 +25,17 @@ class MappingRange:
     destination_range_start: int
     source_range_start: int
     range_length: int
+    destination_range_end: int
+    source_range_end: int
 
     def __init__(self, line: str):
         self.destination_range_start, self.source_range_start, self.range_length = map(
             int, re.findall(r"\d+", line)
         )
+        self.destination_range_end = (
+            self.destination_range_start + self.range_length - 1
+        )
+        self.source_range_end = self.source_range_start + self.range_length - 1
 
     def __repr__(self):
         return f"{self.destination_range_start} {self.source_range_start} {self.range_length}"
@@ -66,7 +74,8 @@ class Map:
     def map_ranges(self, seed_range: SeedRange) -> list[SeedRange]:
         for mr in self.mapping_ranges:
             if seed_range.start in mr:
-                if seed_range.start + seed_range.range in mr:
+                if seed_range.end in mr:
+                    # SeedRange fully contained in MappingRange.
                     # E.g. we try to map the SeedRange(1, 2) through the MappingRange(11, 0, 3),
                     # then 1 -> 12, 2 -> 13, thus returning the new SeedRange(12, 2) suffices.
                     return [
@@ -75,6 +84,7 @@ class Map:
                         )
                     ]
                 else:
+                    # SeedRange has left-sided overlap with MappingRange.
                     # E.g. we try to map the SeedRange(1, 5) through the MappingRange(11, 0, 3),
                     # then 1 -> 12, 2 -> 13, but 3, 4, and 5 are not in the range,
                     # thus add SeedRange(12, 2) to result and continue trying to map SeedRange(3, 3).
@@ -94,12 +104,53 @@ class Map:
                             ),
                         ]
                     )
+            elif seed_range.end in mr:
+                # SeedRange has right-sided overlap with MappingRange.
+                # E.g. we try to map the SeedRange(1, 5) through the MappingRange(11, 3, 3),
+                # then 3 -> 11, 4 -> 12, 5 -> 13, but 1 and 2 are not in the range,
+                # thus add SeedRange(11, 3) to result and continue trying to map SeedRange(1, 2).
+                range_included = seed_range.end - mr.source_range_start + 1
+                return flatten(
+                    [
+                        SeedRange(mr.destination_range_start, range_included),
+                        self.map_ranges(
+                            SeedRange(
+                                seed_range.start, seed_range.range - range_included
+                            )
+                        ),
+                    ]
+                )
+            elif (
+                seed_range.start < mr.source_range_start
+                and seed_range.end > mr.source_range_end
+            ):
+                # MappingRange is fully contained in SeedRange.
+                # E.g. we try to map the SeedRange(1, 5) through the MappingRange(11, 2, 3),
+                # then 2 -> 11, 3 -> 12, 4 -> 13, but 1 and 5 are not in the range,
+                # thus add SeedRange(11, 3) to result and continue trying to map SeedRange(1, 1) and SeedRange(5, 1).
+                return flatten(
+                    [
+                        SeedRange(mr.destination_range_start, mr.range_length),
+                        self.map_ranges(
+                            SeedRange(
+                                seed_range.start,
+                                mr.source_range_start - seed_range.start,
+                            )
+                        ),
+                        self.map_ranges(
+                            SeedRange(
+                                mr.source_range_end + 1,
+                                seed_range.end - mr.source_range_end,
+                            )
+                        ),
+                    ]
+                )
         # If we have run out of MappingRanges, simply return the SeedRange itself.
         return [seed_range]
 
 
 @dataclass
-class MapList:
+class Almanac:
     map_list = list[Map]
 
     def __init__(self, map_list: list[Map]):
@@ -121,7 +172,7 @@ class MapList:
                 return m
 
 
-def get_lowest_location(seeds: list[int], maps: MapList) -> int:
+def get_lowest_location(seeds: list[int], maps: Almanac) -> int:
     current_map = maps["seed"]
     while current_map:
         for i, num in enumerate(seeds):
@@ -130,7 +181,7 @@ def get_lowest_location(seeds: list[int], maps: MapList) -> int:
     return min(seeds)
 
 
-def get_lowest_location_ranges(seeds: list[int], maps: MapList) -> int:
+def get_lowest_location_ranges(seeds: list[int], maps: Almanac) -> int:
     seeds: list[SeedRange] = [
         SeedRange(start, range) for start, range in grouped(seeds, 2)
     ]
@@ -144,10 +195,10 @@ def get_lowest_location_ranges(seeds: list[int], maps: MapList) -> int:
     return min(seeds).start
 
 
-def parse_maps(text: str) -> tuple[list[int], MapList]:
+def parse_maps(text: str) -> tuple[list[int], Almanac]:
     tmp = re.findall(r"([^\n]+)\n([\d\s]+)", text)
     seeds = list(map(int, re.findall(r"\d+", tmp[0][0])))
-    maps = MapList([Map(m[0], m[1]) for m in tmp[1:]])
+    maps = Almanac([Map(m[0], m[1]) for m in tmp[1:]])
     return seeds, maps
 
 

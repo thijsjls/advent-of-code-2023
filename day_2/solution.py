@@ -1,14 +1,6 @@
 """Day 2 solution."""
 
-
-def read_input(test: bool = False) -> list[str]:
-    """Read input file lines."""
-    input_file = "input.txt"
-    if test:
-        input_file = "test_input.txt"
-    with open(input_file, "r") as f:
-        lines = f.readlines()
-        return lines
+from helpers import prod, read_input
 
 
 def game_is_possible(game: str, bag: dict) -> bool:
@@ -20,13 +12,6 @@ def game_is_possible(game: str, bag: dict) -> bool:
             if number > bag[color]:
                 return False
     return True
-
-
-def prod(l: list) -> int:
-    result = 1
-    for e in l:
-        result *= e
-    return result
 
 
 def possible_bags(game: str) -> dict:

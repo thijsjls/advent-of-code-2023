@@ -1,27 +1,7 @@
 """Day 4 solution."""
-import time
 from collections import defaultdict
 
-
-def timeit(f):
-    def timed(*args, **kw):
-        ts = time.time()
-        result = f(*args, **kw)
-        te = time.time()
-        print(f"func:{f.__name__} took: {te-ts} sec")
-        return result
-
-    return timed
-
-
-def read_input(test: bool = False) -> list[str]:
-    """Read input file lines."""
-    input_file = "input.txt"
-    if test:
-        input_file = "test_input.txt"
-    with open(input_file, "r") as f:
-        lines = f.readlines()
-        return lines
+from helpers import read_input, timeit
 
 
 def parse_card(line: str) -> tuple[set[str]]:
