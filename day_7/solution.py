@@ -40,9 +40,6 @@ class Card:
     def __lt__(self, other):
         return CARD_ORDER[self.label] > CARD_ORDER[other.label]
 
-    def __gt__(self, other):
-        return CARD_ORDER[self.label] < CARD_ORDER[other.label]
-
 
 @dataclass
 class Hand:
@@ -91,9 +88,6 @@ class Hand:
                     return True
             return False
         return TYPE_ORDER[self.type] > TYPE_ORDER[other.type]
-
-    def __gt__(self, other):
-        return not (self < other or self == other)
 
 
 @timeit
