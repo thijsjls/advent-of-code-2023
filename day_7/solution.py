@@ -3,31 +3,8 @@ from dataclasses import dataclass
 
 from helpers import max_count, read_input, timeit
 
-CARD_ORDER = {
-    "A": 0,
-    "K": 1,
-    "Q": 2,
-    "J": 3,
-    "T": 4,
-    "9": 5,
-    "8": 6,
-    "7": 7,
-    "6": 8,
-    "5": 9,
-    "4": 10,
-    "3": 11,
-    "2": 12,
-}
-
-TYPE_ORDER = {
-    "Poker": 0,
-    "Four of a kind": 1,
-    "Full house": 2,
-    "Three of a kind": 3,
-    "Two pair": 4,
-    "One pair": 5,
-    "Soep": 6,
-}
+CARD_ORDER = "AKQJT98765432"
+TYPE_ORDER = "Poker Four of a kind Full house Three of a kind Two pair One pair Soep"
 
 
 @dataclass
@@ -38,7 +15,7 @@ class Card:
         return hash(self.label)
 
     def __lt__(self, other):
-        return CARD_ORDER[self.label] > CARD_ORDER[other.label]
+        return CARD_ORDER.index(self.label) > CARD_ORDER.index(other.label)
 
 
 @dataclass
@@ -87,7 +64,7 @@ class Hand:
                 elif card < other.cards[i]:
                     return True
             return False
-        return TYPE_ORDER[self.type] > TYPE_ORDER[other.type]
+        return TYPE_ORDER.index(self.type) > TYPE_ORDER.index(other.type)
 
 
 @timeit
@@ -102,7 +79,7 @@ def part_1(lines: list[str]) -> int:
 @timeit
 def part_2(lines: list[str]) -> int:
     """Solution to part 2."""
-    CARD_ORDER["J"] = 13
+    CARD_ORDER = "AKQT98765432J"
     return sum(
         (rank + 1) * h.bid
         for rank, h in enumerate(sorted([Hand(line, jokers=True) for line in lines]))
