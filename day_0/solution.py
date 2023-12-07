@@ -1,5 +1,5 @@
 """Day <day_number> solution."""
-from helpers import grouped, read_input, timeit
+from helpers import read_input, timeit
 
 
 @timeit

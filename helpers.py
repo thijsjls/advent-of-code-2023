@@ -34,6 +34,10 @@ def prod(l: list) -> int:
     return result
 
 
+def max_count(l: list) -> int:
+    return l.count(max(set(l), key=l.count))
+
+
 def read_input(single_string: bool = False, test: bool = False) -> list[str] | str:
     """Read input file lines."""
     input_file = "input.txt"
