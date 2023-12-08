@@ -1,5 +1,6 @@
 """Day 8 solution."""
-from helpers import lcm_of_list, read_input, timeit
+from math import lcm
+from helpers import read_input, timeit
 
 
 def parse_nodes(lines: list[str]) -> tuple[list[int], dict[str, tuple[str, str]]]:
@@ -27,7 +28,7 @@ def part_2(lines: list[str]) -> int:
     lr, nodes = parse_nodes(lines)
     step = 0
     steps_per_node = []
-    current_nodes = [n for n in nodes.keys() if n[-1] == "A"]
+    current_nodes = [n for n in nodes.keys() if n.endswith("A")]
     while current_nodes:
         idx_done = [i for i, n in enumerate(current_nodes) if n.endswith("Z")]
         if idx_done:
@@ -38,7 +39,7 @@ def part_2(lines: list[str]) -> int:
             ]
         current_nodes = [nodes[n][lr[step % len(lr)]] for n in current_nodes]
         step += 1
-    return lcm_of_list(steps_per_node)
+    return lcm(*steps_per_node)
 
 
 if __name__ == "__main__":
