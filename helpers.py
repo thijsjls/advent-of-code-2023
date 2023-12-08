@@ -1,4 +1,5 @@
 """General helper functions used in most solutions."""
+import math
 import time
 
 
@@ -36,6 +37,19 @@ def prod(l: list) -> int:
 
 def max_count(l: list) -> int:
     return l.count(max(set(l), key=l.count))
+
+
+def lcm(a, b):
+    return abs(a * b) // math.gcd(a, b)
+
+
+def lcm_of_list(numbers):
+    if not numbers:
+        return None
+    result_lcm = numbers[0]
+    for num in numbers[1:]:
+        result_lcm = lcm(result_lcm, num)
+    return result_lcm
 
 
 def read_input(single_string: bool = False, test: bool = False) -> list[str] | str:
