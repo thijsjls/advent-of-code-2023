@@ -4,28 +4,28 @@ import re
 from helpers import read_input, timeit
 
 
+def extrapolate(numbers: list[int]) -> int:
+    result = 0
+    while any(numbers):
+        result += numbers[-1]
+        numbers = [second - first for first, second in zip(numbers, numbers[1:])]
+    return result
+
+
 @timeit
 def part_1(lines: list[str]) -> int:
     """Solution to part 1."""
-    solution = 0
-    for line in lines:
-        numbers = list(map(int, re.findall(r"-?\d+", line)))
-        while any(numbers):
-            solution += numbers[-1]
-            numbers = [second - first for first, second in zip(numbers, numbers[1:])]
-    return solution
+    return sum(
+        extrapolate(list(map(int, re.findall(r"-?\d+", line)))) for line in lines
+    )
 
 
 @timeit
 def part_2(lines: list[str]) -> int:
     """Solution to part 2."""
-    solution = 0
-    for line in lines:
-        numbers = list(map(int, re.findall(r"-?\d+", line)))[::-1]
-        while any(numbers):
-            solution += numbers[-1]
-            numbers = [second - first for first, second in zip(numbers, numbers[1:])]
-    return solution
+    return sum(
+        extrapolate(list(map(int, re.findall(r"-?\d+", line)))[::-1]) for line in lines
+    )
 
 
 if __name__ == "__main__":
