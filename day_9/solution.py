@@ -22,12 +22,10 @@ def part_2(lines: list[str]) -> int:
     """Solution to part 2."""
     solution = 0
     for line in lines:
-        numbers = list(map(int, re.findall(r'-?\d+', line)))
-        first_elements = [numbers[0]]
+        numbers = list(map(int, re.findall(r'-?\d+', line)))[::-1]
         while any(numbers):
+            solution += numbers[-1]
             numbers = [second - first for first, second in zip(numbers, numbers[1:])]
-            first_elements.append(numbers[0])
-        solution += reduce(lambda x, num: num - x, reversed(first_elements[:-1]), first_elements.pop())
     return solution
 
 
