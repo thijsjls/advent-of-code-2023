@@ -1,6 +1,5 @@
 """Day 9 solution."""
 import re
-from functools import reduce
 
 from helpers import read_input, timeit
 
@@ -10,7 +9,7 @@ def part_1(lines: list[str]) -> int:
     """Solution to part 1."""
     solution = 0
     for line in lines:
-        numbers = list(map(int, re.findall(r'-?\d+', line)))
+        numbers = list(map(int, re.findall(r"-?\d+", line)))
         while any(numbers):
             solution += numbers[-1]
             numbers = [second - first for first, second in zip(numbers, numbers[1:])]
@@ -22,7 +21,7 @@ def part_2(lines: list[str]) -> int:
     """Solution to part 2."""
     solution = 0
     for line in lines:
-        numbers = list(map(int, re.findall(r'-?\d+', line)))[::-1]
+        numbers = list(map(int, re.findall(r"-?\d+", line)))[::-1]
         while any(numbers):
             solution += numbers[-1]
             numbers = [second - first for first, second in zip(numbers, numbers[1:])]

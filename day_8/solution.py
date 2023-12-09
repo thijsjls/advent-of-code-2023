@@ -1,5 +1,6 @@
 """Day 8 solution."""
 from math import lcm
+
 from helpers import read_input, timeit
 
 
